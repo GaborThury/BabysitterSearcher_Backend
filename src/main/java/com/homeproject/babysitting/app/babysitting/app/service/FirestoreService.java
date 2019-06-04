@@ -20,7 +20,7 @@ public class FirestoreService {
     private final String documentPath = "test";
 
 
-    public Map<String, Object> getQuoteFromFirestore() {
+    public Map<String, Object> getDataFromFirestore() {
         //DocumentReference docRef = db.collection("sampleData").document("test");
         DocumentReference documentReference = db.collection(collectionPath).document(documentPath);
         ApiFuture<DocumentSnapshot> future = documentReference.get();
