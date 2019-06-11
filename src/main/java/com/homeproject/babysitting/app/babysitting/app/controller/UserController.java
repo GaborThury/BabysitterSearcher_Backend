@@ -11,10 +11,13 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/users")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
+/*
     @Autowired
     private FirestoreService firestoreService;
+*/
 
 
     @Autowired
@@ -46,16 +49,35 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{name}")
-    public ResponseEntity createUser(@PathVariable(value = "name") String name ,@RequestBody Map<String, Object> map) {
-        return ResponseEntity.ok(userService.create(name, map));
+    @PostMapping("/")
+    public ResponseEntity createUser(@RequestBody Map<String, Object> map) {
+        if (userNameExistsAndNotEmpty(map)) {
+            String userName = map.get("userName").toString();
+            return ResponseEntity.ok(userService.create(userName, map));
+        } else {
+            return ResponseEntity.badRequest().body("Attribute 'userName' cannot be empty or null!");
+        }
     }
 
-    @PutMapping("/{name}")
-    public ResponseEntity updateUser(@PathVariable(value = "name") String name ,@RequestBody Map<String, Object> map) {
-        return ResponseEntity.ok(userService.update(name, map));
+    @PutMapping("/")
+    public ResponseEntity updateUser(@RequestBody Map<String, Object> map) {
+        if (userNameExistsAndNotEmpty(map)) {
+            String userName = map.get("userName").toString();
+            return ResponseEntity.ok(userService.update(userName, map));
+        } else {
+            return ResponseEntity.badRequest().body("Attribute 'userName' cannot be empty or null!");
+        }
     }
 
+    private boolean userNameExistsAndNotEmpty(Map<String, Object> map) {
+        try {
+            String userName = map.get("userName").toString();
+            if (userName.isEmpty()) throw new IllegalArgumentException();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
 /*    @PostMapping("/user")
     public void create(@RequestHeader(value = "ID-TOKEN") String idToken) {
