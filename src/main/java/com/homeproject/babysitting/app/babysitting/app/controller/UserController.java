@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/users")
-//@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
 /*
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity findall() {
+    public ResponseEntity findAll() {
         try {
             return ResponseEntity.ok(userService.findAll());
         } catch (ExecutionException | InterruptedException e) {
