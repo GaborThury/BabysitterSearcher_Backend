@@ -3,6 +3,7 @@ package com.homeproject.babysitting.app.babysitting.app.controller;
 import com.homeproject.babysitting.app.babysitting.app.service.FirestoreService;
 import com.homeproject.babysitting.app.babysitting.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +46,8 @@ public class UserController {
             return ResponseEntity.ok(userService.findAllUserNames());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error while getting usernames data");
         }
     }
 
