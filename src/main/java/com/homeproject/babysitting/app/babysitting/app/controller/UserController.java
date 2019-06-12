@@ -1,8 +1,6 @@
 package com.homeproject.babysitting.app.babysitting.app.controller;
 
-import com.homeproject.babysitting.app.babysitting.app.service.FirestoreService;
 import com.homeproject.babysitting.app.babysitting.app.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +18,16 @@ public class UserController {
     private FirestoreService firestoreService;
 */
 
-
-    @Autowired
     private UserService userService;
+    private static final String USERNAME_KEY = "userName";
 
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-    @GetMapping("/{name}")
-    public ResponseEntity findUser(@PathVariable(value = "name") String name) {
-        return ResponseEntity.ok(userService.findUserByName(name));
+    @GetMapping("/{id}")
+    public ResponseEntity findOne(@PathVariable(value = "id") String id) {
+        return ResponseEntity.ok(userService.findById(id));
     }
 
     @GetMapping("/")
@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping("/usernames")
     public ResponseEntity findAllUserNames() {
         try {
-            return ResponseEntity.ok(userService.findAllUserNames());
+            return ResponseEntity.ok(userService.findAllNames());
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -52,9 +52,9 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity createUser(@RequestBody Map<String, Object> map) {
+    public ResponseEntity create(@RequestBody Map<String, Object> map) {
         if (userNameExistsAndNotEmpty(map)) {
-            String userName = map.get("userName").toString();
+            String userName = map.get(USERNAME_KEY).toString();
             return ResponseEntity.ok(userService.create(userName, map));
         } else {
             return ResponseEntity.badRequest().body("Attribute 'userName' cannot be empty or null!");
@@ -62,9 +62,9 @@ public class UserController {
     }
 
     @PutMapping("/")
-    public ResponseEntity updateUser(@RequestBody Map<String, Object> map) {
+    public ResponseEntity update(@RequestBody Map<String, Object> map) {
         if (userNameExistsAndNotEmpty(map)) {
-            String userName = map.get("userName").toString();
+            String userName = map.get(USERNAME_KEY).toString();
             return ResponseEntity.ok(userService.update(userName, map));
         } else {
             return ResponseEntity.badRequest().body("Attribute 'userName' cannot be empty or null!");
@@ -73,7 +73,7 @@ public class UserController {
 
     private boolean userNameExistsAndNotEmpty(Map<String, Object> map) {
         try {
-            String userName = map.get("userName").toString();
+            String userName = map.get(USERNAME_KEY).toString();
             if (userName.isEmpty()) throw new IllegalArgumentException();
         } catch (Exception e) {
             return false;
