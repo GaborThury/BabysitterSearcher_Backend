@@ -12,7 +12,7 @@ public interface DomainService {
 
     Map<String, Object> findById(String id);
 
-    Map<String, Object> create(String name, Map<String, Object> values);
+    Map<String, Object> create(Map<String, Object> values);
 
-    Map<String, Object> update(String name, Map<String, Object> values);
+    Map<String, Object> update(Map<String, Object> values);
 }

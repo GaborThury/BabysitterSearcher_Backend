@@ -1,7 +1,6 @@
 package com.homeproject.babysitting.app.babysitting.app.controller;
 
 import com.homeproject.babysitting.app.babysitting.app.service.AdvertisementService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,6 @@ import java.util.concurrent.ExecutionException;
 public class AdvertisementController {
 
     private AdvertisementService advertisementService;
-    private static final String ADVERTISEMENT_NAME_KEY = "name";
 
     public AdvertisementController(AdvertisementService advertisementService) {
         this.advertisementService = advertisementService;
@@ -31,7 +29,6 @@ public class AdvertisementController {
         try {
             return ResponseEntity.ok(advertisementService.findAll());
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }
@@ -41,30 +38,23 @@ public class AdvertisementController {
         try {
             return ResponseEntity.ok(advertisementService.findAllNames());
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error while getting advertisement id list.");
         }
     }
 
     @PostMapping("/")
-    public ResponseEntity create(@RequestBody Map<String, Object> map) {
-        return null;
+    public ResponseEntity create(@RequestBody Map<String, Object> request) {
+        return ResponseEntity.ok(advertisementService.create(request));
     }
 
     @PutMapping("/")
-    public ResponseEntity update(@RequestBody Map<String, Object> map) {
-        return null;
-    }
-
-    private boolean userNameExistsAndNotEmpty(Map<String, Object> map) {
+    public ResponseEntity update(@RequestBody Map<String, Object> request) {
         try {
-            String userName = map.get("userName").toString();
-            if (userName.isEmpty()) throw new IllegalArgumentException();
-        } catch (Exception e) {
-            return false;
+            return ResponseEntity.ok(advertisementService.update(request));
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return ResponseEntity.badRequest()
+                    .body("Attribute 'id' cannot be empty or null!");
         }
-        return true;
     }
-
 }

@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 public class AdvertisementService implements DomainService {
 
     private static final String ADVERTISEMENT_COLLECTION = "advertisements";
+    private static final String ADVERTISEMENT_NAME_KEY = "id";
     private FirestoreService firestoreService;
 
     public AdvertisementService(FirestoreService firestoreService) {
@@ -27,18 +28,25 @@ public class AdvertisementService implements DomainService {
     }
 
     @Override
-    public Map<String, Object> findById(String name) {
-        return firestoreService.getDocumentFields(ADVERTISEMENT_COLLECTION, name);
+    public Map<String, Object> findById(String id) {
+        return firestoreService.getDocumentFields(ADVERTISEMENT_COLLECTION, id);
     }
 
     @Override
-    public Map<String, Object> create(String name, Map<String, Object> values) {
-        return firestoreService.createFireStoreDocument(ADVERTISEMENT_COLLECTION, name, values);
+    public Map<String, Object> create(Map<String, Object> values) {
+        return firestoreService.createFireStoreDocument(ADVERTISEMENT_COLLECTION, values);
     }
 
     @Override
-    public Map<String, Object> update(String name, Map<String, Object> values) {
-        return firestoreService.updateFireStoreDocument(ADVERTISEMENT_COLLECTION, name, values);
+    public Map<String, Object> update(Map<String, Object> values) {
+        String id;
+        try {
+            id = values.get(ADVERTISEMENT_NAME_KEY).toString();
+            if (id.isEmpty()) throw new IllegalArgumentException();
+        } catch (NullPointerException e) {
+            throw e;
+        }
+        return firestoreService.updateFireStoreDocument(ADVERTISEMENT_COLLECTION, id, values);
     }
 
 }

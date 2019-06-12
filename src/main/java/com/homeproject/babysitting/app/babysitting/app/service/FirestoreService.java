@@ -69,6 +69,16 @@ public class FirestoreService {
         return values;
     }
 
+    public Map<String, Object> createFireStoreDocument(String collectionName, Map<String, Object> values) {
+        if (collectionName == null || values == null) {
+            throw new IllegalArgumentException("Parameters cannot be null");
+        }
+        db.collection(collectionName)
+                .document()
+                .set(values);
+        return values;
+    }
+
     public Map<String, Object> updateFireStoreDocument(String collectionName, String documentName, Map<String, Object> values) {
         if (collectionName == null || documentName == null || values == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
@@ -79,6 +89,5 @@ public class FirestoreService {
                 .update(values);
         return values;
     }
-
 }
 

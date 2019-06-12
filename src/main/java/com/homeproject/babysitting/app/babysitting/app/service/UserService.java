@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 public class UserService implements DomainService {
 
     private static final String USERS_COLLECTION = "users";
+    private static final String USERNAME_KEY = "userName";
     private FirestoreService firestoreService;
 
     public UserService(FirestoreService firestoreService) {
@@ -48,13 +49,28 @@ public class UserService implements DomainService {
     }
 
     @Override
-    public Map<String, Object> create(String username, Map<String, Object> values) {
-        return firestoreService.createFireStoreDocument(USERS_COLLECTION, username, values);
+    public Map<String, Object> create(Map<String, Object> values) {
+        String userName;
+        try {
+            userName = values.get(USERNAME_KEY).toString();
+            if (userName.isEmpty()) throw new IllegalArgumentException();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return firestoreService.createFireStoreDocument(USERS_COLLECTION, userName, values);
     }
 
     @Override
-    public Map<String, Object> update(String username, Map<String, Object> values) {
-        return firestoreService.updateFireStoreDocument(USERS_COLLECTION, username, values);
+    public Map<String, Object> update(Map<String, Object> values) {
+        String userName;
+        try {
+            userName = values.get(USERNAME_KEY).toString();
+            if (userName.isEmpty()) throw new IllegalArgumentException();
+        } catch (NullPointerException e) {
+            throw e;
+        }
+        return firestoreService.updateFireStoreDocument(USERS_COLLECTION, userName, values);
     }
 }
 
