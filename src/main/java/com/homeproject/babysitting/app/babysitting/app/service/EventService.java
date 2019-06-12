@@ -2,6 +2,7 @@ package com.homeproject.babysitting.app.babysitting.app.service;
 
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -38,14 +39,9 @@ public class EventService implements DomainService {
     }
 
     @Override
-    public Map<String, Object> update(Map<String, Object> values) {
-        String id;
-        try {
-            id = values.get(EVENT_NAME_KEY).toString();
-            if (id.isEmpty()) throw new IllegalArgumentException();
-        } catch (NullPointerException e) {
-            throw e;
-        }
+    public Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
+        String id = values.get(EVENT_NAME_KEY).toString();
+        if (id.isEmpty()) throw new IllegalArgumentException();
         return firestoreService.updateFireStoreDocument(EVENT_COLLECTION, id, values);
     }
 }

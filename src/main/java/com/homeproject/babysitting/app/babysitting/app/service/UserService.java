@@ -49,27 +49,16 @@ public class UserService implements DomainService {
     }
 
     @Override
-    public Map<String, Object> create(Map<String, Object> values) {
-        String userName;
-        try {
-            userName = values.get(USERNAME_KEY).toString();
-            if (userName.isEmpty()) throw new IllegalArgumentException();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw e;
-        }
+    public Map<String, Object> create(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
+        String userName = values.get(USERNAME_KEY).toString();
+        if (userName.isEmpty()) throw new IllegalArgumentException();
         return firestoreService.createFireStoreDocument(USERS_COLLECTION, userName, values);
     }
 
     @Override
-    public Map<String, Object> update(Map<String, Object> values) {
-        String userName;
-        try {
-            userName = values.get(USERNAME_KEY).toString();
-            if (userName.isEmpty()) throw new IllegalArgumentException();
-        } catch (NullPointerException e) {
-            throw e;
-        }
+    public Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
+        String userName = values.get(USERNAME_KEY).toString();
+        if (userName.isEmpty()) throw new IllegalArgumentException();
         return firestoreService.updateFireStoreDocument(USERS_COLLECTION, userName, values);
     }
 }

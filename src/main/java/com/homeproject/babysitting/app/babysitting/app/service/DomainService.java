@@ -14,5 +14,5 @@ public interface DomainService {
 
     Map<String, Object> create(Map<String, Object> values);
 
-    Map<String, Object> update(Map<String, Object> values);
+    Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException;
 }
