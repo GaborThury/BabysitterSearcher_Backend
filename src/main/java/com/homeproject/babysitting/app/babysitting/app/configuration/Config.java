@@ -16,10 +16,9 @@ public class Config {
 
     @Bean
     public Firestore db() throws IOException {
-        FileInputStream serviceAccount = new FileInputStream("C:\\Projects\\babysitting app\\src\\main\\resources\\ServiceAccountKey.json");
+        FileInputStream serviceAccount = new FileInputStream("ServiceAccountKey.json");
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                //.setDatabaseUrl("https://testproject-d5ef9.firebaseio.com")
                 .build();
 
         FirebaseApp.initializeApp(options);
