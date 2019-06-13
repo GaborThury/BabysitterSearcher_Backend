@@ -40,7 +40,7 @@ public class AdvertisementService implements DomainService {
 
     @Override
     public Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
-        String id = values.get(ADVERTISEMENT_NAME_KEY).toString();
+        String id = values.remove(ADVERTISEMENT_NAME_KEY).toString();
         if (id.isEmpty()) throw new IllegalArgumentException();
         return firestoreService.updateFireStoreDocument(ADVERTISEMENT_COLLECTION, id, values);
     }

@@ -40,7 +40,7 @@ public class EventService implements DomainService {
 
     @Override
     public Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
-        String id = values.get(EVENT_NAME_KEY).toString();
+        String id = values.remove(EVENT_NAME_KEY).toString();
         if (id.isEmpty()) throw new IllegalArgumentException();
         return firestoreService.updateFireStoreDocument(EVENT_COLLECTION, id, values);
     }
