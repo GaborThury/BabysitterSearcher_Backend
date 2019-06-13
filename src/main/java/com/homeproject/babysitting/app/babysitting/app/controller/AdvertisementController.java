@@ -57,4 +57,15 @@ public class AdvertisementController {
                     .body("Attribute 'id' cannot be empty or null!");
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable(value = "id") String id) {
+        try {
+            advertisementService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

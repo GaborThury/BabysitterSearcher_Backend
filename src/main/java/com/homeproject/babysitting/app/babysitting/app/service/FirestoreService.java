@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -89,5 +90,27 @@ public class FirestoreService {
                 .update(values);
         return values;
     }
+
+
+    public void deleteFireStoreDocument(String collectionName, String documentName)
+            throws IllegalArgumentException, NoSuchElementException,
+            InterruptedException, ExecutionException {
+        if (collectionName == null || documentName == null) {
+            throw new IllegalArgumentException("Parameters 'collectionName' and/or 'documentName' cannot be null!");
+        }
+        if (isDocumentExists(collectionName, documentName)) {
+            db
+                    .collection(collectionName)
+                    .document(documentName)
+                    .delete();
+        } else {
+            throw new NoSuchElementException("The given document does not exists, hence it cannot be deleted!");
+        }
+    }
+
+    private boolean isDocumentExists(String collectionName, String documentName) throws ExecutionException, InterruptedException {
+        return db.collection(collectionName).document(documentName).get().get().exists();
+    }
+
 }
 

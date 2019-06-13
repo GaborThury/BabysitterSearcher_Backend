@@ -64,6 +64,17 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable(value = "id") String id) {
+        try {
+            userService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
 /*    @PostMapping("/user")
     public void create(@RequestHeader(value = "ID-TOKEN") String idToken) {
         userService.fakeSaveUser(idToken);

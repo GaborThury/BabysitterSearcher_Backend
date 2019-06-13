@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -42,5 +43,12 @@ public class AdvertisementService implements DomainService {
         String id = values.get(ADVERTISEMENT_NAME_KEY).toString();
         if (id.isEmpty()) throw new IllegalArgumentException();
         return firestoreService.updateFireStoreDocument(ADVERTISEMENT_COLLECTION, id, values);
+    }
+
+    @Override
+    public void delete(String id) throws IllegalArgumentException,
+            NoSuchElementException, ExecutionException, InterruptedException {
+        if (id == null || id.isEmpty()) throw new IllegalArgumentException("'id' cannot be empty or null!");
+        firestoreService.deleteFireStoreDocument(ADVERTISEMENT_COLLECTION, id);
     }
 }

@@ -2,9 +2,9 @@ package com.homeproject.babysitting.app.babysitting.app.service;
 
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Null;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -44,4 +44,12 @@ public class EventService implements DomainService {
         if (id.isEmpty()) throw new IllegalArgumentException();
         return firestoreService.updateFireStoreDocument(EVENT_COLLECTION, id, values);
     }
+
+    @Override
+    public void delete(String id) throws IllegalArgumentException,
+            NoSuchElementException, ExecutionException, InterruptedException {
+        if (id == null || id.isEmpty()) throw new IllegalArgumentException("'id' cannot be empty or null!");
+        firestoreService.deleteFireStoreDocument(EVENT_COLLECTION, id);
+    }
+
 }

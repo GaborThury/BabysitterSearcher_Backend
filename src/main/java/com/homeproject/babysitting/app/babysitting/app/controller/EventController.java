@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Null;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -57,6 +58,16 @@ public class EventController {
         } catch (IllegalArgumentException | NullPointerException e) {
             return ResponseEntity.badRequest()
                     .body("Attribute 'id' cannot be empty or null!");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable(value = "id") String id) {
+        try {
+            eventService.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
