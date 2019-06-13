@@ -67,5 +67,13 @@ public class AdvertisementController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
+    @DeleteMapping("/")
+    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request) {
+        try {
+            advertisementService.deleteFields(request);
+            return ResponseEntity.ok().build();
+        } catch (ExecutionException | InterruptedException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

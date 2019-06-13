@@ -53,21 +53,30 @@ public class UserService implements DomainService {
     public Map<String, Object> create(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
         String userName = values.get(USERNAME_KEY).toString();
         if (userName.isEmpty()) throw new IllegalArgumentException();
-        return firestoreService.createFireStoreDocument(USERS_COLLECTION, userName, values);
+        return firestoreService.createDocument(USERS_COLLECTION, userName, values);
     }
 
     @Override
     public Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
         String userName = values.get(USERNAME_KEY).toString();
         if (userName.isEmpty()) throw new IllegalArgumentException();
-        return firestoreService.updateFireStoreDocument(USERS_COLLECTION, userName, values);
+        return firestoreService.updateDocument(USERS_COLLECTION, userName, values);
     }
 
     @Override
     public void delete(String userName) throws IllegalArgumentException,
             NoSuchElementException, ExecutionException, InterruptedException {
         if (userName == null || userName.isEmpty()) throw new IllegalArgumentException("'userName' cannot be empty null!");
-        firestoreService.deleteFireStoreDocument(USERS_COLLECTION, userName);
+        firestoreService.deleteDocument(USERS_COLLECTION, userName);
+    }
+
+    @Override
+    public void deleteFields(Map<String, Object> request) throws IllegalArgumentException,
+            NoSuchElementException, ExecutionException, InterruptedException {
+        String id = request.get(USERNAME_KEY).toString();
+        if (id == null || id.isEmpty()) throw new IllegalArgumentException("'id' cannot be empty or null!");
+        List<String> fieldsToDelete = (List<String>) request.get("fieldsToDelete");
+        firestoreService.deleteFields(USERS_COLLECTION, id, fieldsToDelete);
     }
 }
 

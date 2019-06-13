@@ -35,20 +35,29 @@ public class AdvertisementService implements DomainService {
 
     @Override
     public Map<String, Object> create(Map<String, Object> values) {
-        return firestoreService.createFireStoreDocument(ADVERTISEMENT_COLLECTION, values);
+        return firestoreService.createDocument(ADVERTISEMENT_COLLECTION, values);
     }
 
     @Override
     public Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
         String id = values.remove(ADVERTISEMENT_NAME_KEY).toString();
         if (id.isEmpty()) throw new IllegalArgumentException();
-        return firestoreService.updateFireStoreDocument(ADVERTISEMENT_COLLECTION, id, values);
+        return firestoreService.updateDocument(ADVERTISEMENT_COLLECTION, id, values);
     }
 
     @Override
     public void delete(String id) throws IllegalArgumentException,
             NoSuchElementException, ExecutionException, InterruptedException {
         if (id == null || id.isEmpty()) throw new IllegalArgumentException("'id' cannot be empty or null!");
-        firestoreService.deleteFireStoreDocument(ADVERTISEMENT_COLLECTION, id);
+        firestoreService.deleteDocument(ADVERTISEMENT_COLLECTION, id);
+    }
+
+    @Override
+    public void deleteFields(Map<String, Object> request) throws IllegalArgumentException,
+            NoSuchElementException, ExecutionException, InterruptedException {
+        String id = request.get(ADVERTISEMENT_NAME_KEY).toString();
+        if (id == null || id.isEmpty()) throw new IllegalArgumentException("'id' cannot be empty or null!");
+        List<String> fieldsToDelete = (List<String>) request.get("fieldsToDelete");
+        firestoreService.deleteFields(ADVERTISEMENT_COLLECTION, id, fieldsToDelete);
     }
 }

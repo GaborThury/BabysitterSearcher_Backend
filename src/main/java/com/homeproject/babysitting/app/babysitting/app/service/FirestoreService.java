@@ -5,6 +5,7 @@ import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -59,7 +60,7 @@ public class FirestoreService {
         }
     }
 
-    public Map<String, Object> createFireStoreDocument(String collectionName, String documentName, Map<String, Object> values) {
+    public Map<String, Object> createDocument(String collectionName, String documentName, Map<String, Object> values) {
         if (collectionName == null || documentName == null || values == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
@@ -70,7 +71,7 @@ public class FirestoreService {
         return values;
     }
 
-    public Map<String, Object> createFireStoreDocument(String collectionName, Map<String, Object> values) {
+    public Map<String, Object> createDocument(String collectionName, Map<String, Object> values) {
         if (collectionName == null || values == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
@@ -80,7 +81,7 @@ public class FirestoreService {
         return values;
     }
 
-    public Map<String, Object> updateFireStoreDocument(String collectionName, String documentName, Map<String, Object> values) {
+    public Map<String, Object> updateDocument(String collectionName, String documentName, Map<String, Object> values) {
         if (collectionName == null || documentName == null || values == null) {
             throw new IllegalArgumentException("Parameters cannot be null");
         }
@@ -92,7 +93,7 @@ public class FirestoreService {
     }
 
 
-    public void deleteFireStoreDocument(String collectionName, String documentName)
+    public void deleteDocument(String collectionName, String documentName)
             throws IllegalArgumentException, NoSuchElementException,
             InterruptedException, ExecutionException {
         if (collectionName == null || documentName == null) {
@@ -103,6 +104,24 @@ public class FirestoreService {
                     .collection(collectionName)
                     .document(documentName)
                     .delete();
+        } else {
+            throw new NoSuchElementException("The given document does not exists, hence it cannot be deleted!");
+        }
+    }
+
+    public void deleteFields(String collectionName, String documentName, List<String> idS)
+            throws IllegalArgumentException, NoSuchElementException,
+            InterruptedException, ExecutionException{
+        if (collectionName == null || documentName == null) {
+            throw new IllegalArgumentException("Parameters 'collectionName' and/or 'documentName' cannot be null!");
+        }
+        if (isDocumentExists(collectionName, documentName)) {
+            Map<String, Object> fieldsToDelete = new HashMap<>();
+            idS.forEach(id -> fieldsToDelete.put(id, FieldValue.delete()));
+            db
+                    .collection(collectionName)
+                    .document(documentName)
+                    .update(fieldsToDelete);
         } else {
             throw new NoSuchElementException("The given document does not exists, hence it cannot be deleted!");
         }

@@ -17,4 +17,6 @@ public interface DomainService {
     Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException;
 
     void delete(String id) throws ExecutionException, InterruptedException;
+
+    void deleteFields(Map<String, Object> request) throws ExecutionException, InterruptedException;
 }

@@ -2,6 +2,7 @@ package com.homeproject.babysitting.app.babysitting.app.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -35,21 +36,29 @@ public class EventService implements DomainService {
 
     @Override
     public Map<String, Object> create(Map<String, Object> values) {
-        return firestoreService.createFireStoreDocument(EVENT_COLLECTION, values);
+        return firestoreService.createDocument(EVENT_COLLECTION, values);
     }
 
     @Override
     public Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException {
         String id = values.remove(EVENT_NAME_KEY).toString();
         if (id.isEmpty()) throw new IllegalArgumentException();
-        return firestoreService.updateFireStoreDocument(EVENT_COLLECTION, id, values);
+        return firestoreService.updateDocument(EVENT_COLLECTION, id, values);
     }
 
     @Override
     public void delete(String id) throws IllegalArgumentException,
             NoSuchElementException, ExecutionException, InterruptedException {
         if (id == null || id.isEmpty()) throw new IllegalArgumentException("'id' cannot be empty or null!");
-        firestoreService.deleteFireStoreDocument(EVENT_COLLECTION, id);
+        firestoreService.deleteDocument(EVENT_COLLECTION, id);
     }
 
+    @Override
+    public void deleteFields(Map<String, Object> request) throws IllegalArgumentException,
+            NoSuchElementException, ExecutionException, InterruptedException {
+        String id = request.get(EVENT_NAME_KEY).toString();
+        if (id == null || id.isEmpty()) throw new IllegalArgumentException("'id' cannot be empty or null!");
+        List<String> fieldsToDelete = (List<String>) request.get("fieldsToDelete");
+        firestoreService.deleteFields(EVENT_COLLECTION, id, fieldsToDelete);
+    }
 }

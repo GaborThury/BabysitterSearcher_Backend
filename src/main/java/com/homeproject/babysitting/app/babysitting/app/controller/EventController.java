@@ -1,14 +1,11 @@
 package com.homeproject.babysitting.app.babysitting.app.controller;
 
 import com.homeproject.babysitting.app.babysitting.app.service.EventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Null;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -67,6 +64,16 @@ public class EventController {
             eventService.delete(id);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/")
+    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request) {
+        try {
+            eventService.deleteFields(request);
+            return ResponseEntity.ok().build();
+        } catch (ExecutionException | InterruptedException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

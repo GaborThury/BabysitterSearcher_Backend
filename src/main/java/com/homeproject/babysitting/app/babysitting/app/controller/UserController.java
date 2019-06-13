@@ -73,6 +73,15 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @DeleteMapping("/")
+    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request) {
+        try {
+            userService.deleteFields(request);
+            return ResponseEntity.ok().build();
+        } catch (ExecutionException | InterruptedException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 
 /*    @PostMapping("/user")
