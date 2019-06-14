@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -20,61 +21,49 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity findOne(@PathVariable(value = "id") String id) {
+    public ResponseEntity findById(@PathVariable(value = "id") String id)
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
         return ResponseEntity.ok(eventService.findById(id));
     }
 
     @GetMapping("/")
-    public ResponseEntity findAll() {
-        try {
-            return ResponseEntity.ok(eventService.findAll());
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity findAll() throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(eventService.findAll());
     }
 
     @GetMapping("/ids")
-    public ResponseEntity findAllEventNames() {
-        try {
-            return ResponseEntity.ok(eventService.findAllNames());
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error while getting eventnames data");
-        }
+    public ResponseEntity findAllIdS() throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(eventService.findIdS());
     }
 
     @PostMapping("/")
-    public ResponseEntity create(@RequestBody Map<String, Object> request) {
-        return ResponseEntity.ok(eventService.create(request));
+    public ResponseEntity create(@RequestBody Map<String, Object> request)
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
+        eventService.create(request);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/")
-    public ResponseEntity update(@RequestBody Map<String, Object> request) {
-        try {
-            return ResponseEntity.ok(eventService.update(request));
-        } catch (IllegalArgumentException | NullPointerException e) {
-            return ResponseEntity.badRequest()
-                    .body("Attribute 'id' cannot be empty or null!");
-        }
+    public ResponseEntity update(@RequestBody Map<String, Object> request)
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
+        eventService.update(request);
+        return ResponseEntity.ok().build();
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable(value = "id") String id) {
-        try {
-            eventService.delete(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity delete(@PathVariable(value = "id") String id)
+            throws IllegalArgumentException, NoSuchElementException,
+            ExecutionException, InterruptedException {
+        eventService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/")
-    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request) {
-        try {
-            eventService.deleteFields(request);
-            return ResponseEntity.ok().build();
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request)
+            throws IllegalArgumentException, NoSuchElementException,
+            ExecutionException, InterruptedException {
+        eventService.deleteFields(request);
+        return ResponseEntity.ok().build();
     }
 }

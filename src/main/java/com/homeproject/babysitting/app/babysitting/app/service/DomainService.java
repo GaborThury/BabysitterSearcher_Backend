@@ -8,13 +8,13 @@ public interface DomainService {
 
     List<Map<String, Object>> findAll() throws ExecutionException, InterruptedException;
 
-    List<String> findAllNames() throws ExecutionException, InterruptedException;
+    List<String> findIdS() throws ExecutionException, InterruptedException;
 
-    Map<String, Object> findById(String id);
+    Map<String, Object> findById(String id) throws ExecutionException, InterruptedException;
 
-    Map<String, Object> create(Map<String, Object> values);
+    void create(Map<String, Object> values) throws ExecutionException, InterruptedException;
 
-    Map<String, Object> update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException;
+    void update(Map<String, Object> values) throws IllegalArgumentException, NullPointerException, ExecutionException, InterruptedException;
 
     void delete(String id) throws ExecutionException, InterruptedException;
 

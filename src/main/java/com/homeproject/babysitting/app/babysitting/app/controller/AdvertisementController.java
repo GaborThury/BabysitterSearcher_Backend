@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -20,60 +21,49 @@ public class AdvertisementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity findOne(@PathVariable(value = "id") String id) {
+    public ResponseEntity findOne(@PathVariable(value = "id") String id)
+            throws ExecutionException, InterruptedException {
         return ResponseEntity.ok(advertisementService.findById(id));
     }
 
     @GetMapping("/")
-    public ResponseEntity findAll() {
-        try {
-            return ResponseEntity.ok(advertisementService.findAll());
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity findAll() throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(advertisementService.findAll());
     }
 
     @GetMapping("/ids")
-    public ResponseEntity findIds() {
-        try {
-            return ResponseEntity.ok(advertisementService.findAllNames());
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error while getting advertisement id list.");
-        }
+    public ResponseEntity findIds() throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(advertisementService.findIdS());
     }
 
     @PostMapping("/")
-    public ResponseEntity create(@RequestBody Map<String, Object> request) {
-        return ResponseEntity.ok(advertisementService.create(request));
+    public ResponseEntity create(@RequestBody Map<String, Object> request)
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
+        advertisementService.create(request);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/")
-    public ResponseEntity update(@RequestBody Map<String, Object> request) {
-        try {
-            return ResponseEntity.ok(advertisementService.update(request));
-        } catch (IllegalArgumentException | NullPointerException e) {
-            return ResponseEntity.badRequest()
-                    .body("Attribute 'id' cannot be empty or null!");
-        }
+    public ResponseEntity update(@RequestBody Map<String, Object> request)
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
+        advertisementService.update(request);
+        return ResponseEntity.ok().build();
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable(value = "id") String id) {
-        try {
-            advertisementService.delete(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity delete(@PathVariable(value = "id") String id)
+            throws IllegalArgumentException, NoSuchElementException,
+            ExecutionException, InterruptedException {
+        advertisementService.delete(id);
+        return ResponseEntity.ok().build();
     }
+
     @DeleteMapping("/")
-    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request) {
-        try {
-            advertisementService.deleteFields(request);
-            return ResponseEntity.ok().build();
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request)
+            throws IllegalArgumentException, NoSuchElementException,
+            ExecutionException, InterruptedException {
+        advertisementService.deleteFields(request);
+        return ResponseEntity.ok().build();
     }
 }

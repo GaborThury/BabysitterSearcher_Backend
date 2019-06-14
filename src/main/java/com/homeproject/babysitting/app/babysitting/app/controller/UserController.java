@@ -1,12 +1,11 @@
 package com.homeproject.babysitting.app.babysitting.app.controller;
 
 import com.homeproject.babysitting.app.babysitting.app.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Null;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -21,66 +20,50 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity findOne(@PathVariable(value = "id") String id) {
+    public ResponseEntity findOne(@PathVariable(value = "id") String id)
+            throws ExecutionException, InterruptedException {
         return ResponseEntity.ok(userService.findById(id));
     }
 
     @GetMapping("/")
-    public ResponseEntity findAll() {
-        try {
-            return ResponseEntity.ok(userService.findAll());
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity findAll() throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/usernames")
-    public ResponseEntity findAllUserNames() {
-        try {
-            return ResponseEntity.ok(userService.findAllNames());
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error while getting usernames data");
-        }
+    public ResponseEntity findAllUserNames()
+            throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(userService.findIdS());
     }
 
     @PostMapping("/")
-    public ResponseEntity create(@RequestBody Map<String, Object> request) {
-        try {
-            return ResponseEntity.ok(userService.create(request));
-        } catch (NullPointerException | IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body("Attribute 'userName' cannot be empty or null!");
-        }
+    public ResponseEntity create(@RequestBody Map<String, Object> request)
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
+        userService.create(request);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/")
-    public ResponseEntity update(@RequestBody Map<String, Object> request) {
-        try {
-            return ResponseEntity.ok(userService.update(request));
-        } catch (NullPointerException | IllegalArgumentException e) {
-            return ResponseEntity.badRequest()
-                    .body("Attribute 'userName' cannot be empty or null!");
-        }
+    public ResponseEntity update(@RequestBody Map<String, Object> request)
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
+        userService.update(request);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable(value = "id") String id) {
-        try {
-            userService.delete(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity delete(@PathVariable(value = "id") String id)
+            throws ExecutionException, InterruptedException,
+            NoSuchElementException, IllegalArgumentException {
+        userService.delete(id);
+        return ResponseEntity.ok().build();
     }
+
     @DeleteMapping("/")
-    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request) {
-        try {
-            userService.deleteFields(request);
-            return ResponseEntity.ok().build();
-        } catch (ExecutionException | InterruptedException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity deleteFields(@RequestBody Map<String, Object> request)
+            throws ExecutionException, InterruptedException,
+            IllegalArgumentException, NoSuchElementException {
+        userService.deleteFields(request);
+        return ResponseEntity.ok().build();
     }
 
 
