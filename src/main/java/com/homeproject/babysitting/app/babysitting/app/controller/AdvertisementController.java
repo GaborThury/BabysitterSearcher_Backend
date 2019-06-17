@@ -38,14 +38,14 @@ public class AdvertisementController {
 
     @PostMapping("/")
     public ResponseEntity create(@RequestBody Map<String, Object> request)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException {
         advertisementService.create(request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/")
     public ResponseEntity update(@RequestBody Map<String, Object> request)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException {
         advertisementService.update(request);
         return ResponseEntity.ok().build();
 
@@ -53,16 +53,14 @@ public class AdvertisementController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable(value = "id") String id)
-            throws IllegalArgumentException, NoSuchElementException,
-            ExecutionException, InterruptedException {
+            throws ExecutionException, InterruptedException {
         advertisementService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/")
     public ResponseEntity deleteFields(@RequestBody Map<String, Object> request)
-            throws IllegalArgumentException, NoSuchElementException,
-            ExecutionException, InterruptedException {
+            throws ExecutionException, InterruptedException {
         advertisementService.deleteFields(request);
         return ResponseEntity.ok().build();
     }

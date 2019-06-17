@@ -35,17 +35,21 @@ public class UserService implements DomainService {
     }*/
 
     @Override
-    public List<Map<String, Object>> findAll() throws ExecutionException, InterruptedException {
+    public List<Map<String, Object>> findAll() throws ExecutionException,
+            InterruptedException, IllegalArgumentException {
         return firestoreService.getAllDocumentsFromCollection(USERS_COLLECTION);
     }
 
     @Override
-    public List<String> findIdS() throws ExecutionException, InterruptedException {
+    public List<String> findIdS() throws ExecutionException,
+            InterruptedException, IllegalArgumentException {
         return firestoreService.getAllDocumentNamesFromCollection(USERS_COLLECTION);
     }
 
     @Override
-    public Map<String, Object> findById(String username) throws ExecutionException, InterruptedException {
+    public Map<String, Object> findById(String username)
+            throws ExecutionException, InterruptedException,
+            IllegalArgumentException, NoSuchElementException {
         return firestoreService.getDocumentFields(USERS_COLLECTION, username);
     }
 

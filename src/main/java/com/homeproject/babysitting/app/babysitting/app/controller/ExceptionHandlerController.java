@@ -18,17 +18,18 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NullPointerException.class)
-    protected ResponseEntity<Object> handleNullPointers() {
-        return ResponseEntity.badRequest().body("Nullpointer exception!");
+    protected ResponseEntity<Object> handleNullPointers(NullPointerException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
     @ExceptionHandler({InterruptedException.class, ExecutionException.class})
-    protected ResponseEntity<Object> handleInterruptedException() {
+    protected ResponseEntity<Object> handleInterruptedException(Exception e) {
+        e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    protected ResponseEntity<Object> handleNoSuchElementException() {
-        return ResponseEntity.badRequest().body("No such element found!");
+    protected ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

@@ -19,7 +19,8 @@ public class FirestoreService {
     }
 
     List<Map<String, Object>> getAllDocumentsFromCollection(String collectionName)
-            throws ExecutionException, InterruptedException {
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
+        if (collectionName == null) throw new IllegalArgumentException("Collection name cannot be null!");
         ApiFuture<QuerySnapshot> future = db.collection(collectionName).get();
         List<DocumentSnapshot> documents = future.get().getDocuments();
         return documents.stream()
@@ -28,7 +29,8 @@ public class FirestoreService {
     }
 
     List<String> getAllDocumentNamesFromCollection(String collectionName)
-            throws ExecutionException, InterruptedException {
+            throws ExecutionException, InterruptedException, IllegalArgumentException {
+        if (collectionName == null) throw new IllegalArgumentException("Collection name cannot be null!");
         ApiFuture<QuerySnapshot> future = db.collection(collectionName).get();
         return future.get().getDocuments().stream()
                 .map(DocumentSnapshot::getId)
@@ -36,14 +38,22 @@ public class FirestoreService {
     }
 
     Map<String, Object> getDocumentFields(String collectionName, String documentName)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException,
+            IllegalArgumentException, NoSuchElementException {
         if (collectionName == null || documentName == null) {
             throw new IllegalArgumentException("Parameters cannot be null!");
         }
-        ApiFuture<DocumentSnapshot> future = db.collection(collectionName).document(documentName).get();
-        DocumentSnapshot document = future.get();
+        DocumentSnapshot document = db
+                .collection(collectionName)
+                .document(documentName)
+                .get()
+                .get();
 
-        return document.exists() ? document.getData() : null;
+        if (document.exists()) {
+            return document.getData();
+        } else {
+            throw new NoSuchElementException("No element found with the given ID: " + documentName);
+        }
     }
 
     void createDocument(String collectionName, String documentName, Map<String, Object> values)
@@ -80,7 +90,6 @@ public class FirestoreService {
                 .update(values)
                 .get();
     }
-
 
     void deleteDocument(String collectionName, String documentName)
             throws IllegalArgumentException, NoSuchElementException,
@@ -121,6 +130,5 @@ public class FirestoreService {
     private boolean isDocumentExists(String collectionName, String documentName) throws ExecutionException, InterruptedException {
         return db.collection(collectionName).document(documentName).get().get().exists();
     }
-
 }
 

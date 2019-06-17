@@ -19,17 +19,20 @@ public class AdvertisementService implements DomainService {
     }
 
     @Override
-    public List<Map<String, Object>> findAll() throws ExecutionException, InterruptedException {
+    public List<Map<String, Object>> findAll() throws ExecutionException,
+            InterruptedException, IllegalArgumentException {
         return firestoreService.getAllDocumentsFromCollection(ADVERTISEMENT_COLLECTION);
     }
 
     @Override
-    public List<String> findIdS() throws ExecutionException, InterruptedException {
+    public List<String> findIdS() throws ExecutionException,
+            InterruptedException, IllegalArgumentException {
         return firestoreService.getAllDocumentNamesFromCollection(ADVERTISEMENT_COLLECTION);
     }
 
     @Override
-    public Map<String, Object> findById(String id) throws ExecutionException, InterruptedException {
+    public Map<String, Object> findById(String id) throws ExecutionException,
+            InterruptedException, IllegalArgumentException, NoSuchElementException {
         return firestoreService.getDocumentFields(ADVERTISEMENT_COLLECTION, id);
     }
 

@@ -19,18 +19,21 @@ public class EventService implements DomainService {
     }
 
     @Override
-    public List<Map<String, Object>> findAll() throws ExecutionException, InterruptedException {
+    public List<Map<String, Object>> findAll() throws ExecutionException,
+            InterruptedException, IllegalArgumentException {
         return firestoreService.getAllDocumentsFromCollection(EVENT_COLLECTION);
     }
 
     @Override
-    public List<String> findIdS() throws ExecutionException, InterruptedException {
+    public List<String> findIdS() throws ExecutionException,
+            InterruptedException, IllegalArgumentException {
         return firestoreService.getAllDocumentNamesFromCollection(EVENT_COLLECTION);
     }
 
     @Override
     public Map<String, Object> findById(String eventName)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException,
+            IllegalArgumentException, NoSuchElementException {
         return firestoreService.getDocumentFields(EVENT_COLLECTION, eventName);
     }
 

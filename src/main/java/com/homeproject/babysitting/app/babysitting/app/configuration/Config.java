@@ -24,6 +24,4 @@ public class Config {
         FirebaseApp.initializeApp(options);
         return FirestoreClient.getFirestore();
     }
-
-
 }

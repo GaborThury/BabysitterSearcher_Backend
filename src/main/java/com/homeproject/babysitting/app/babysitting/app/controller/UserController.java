@@ -38,30 +38,28 @@ public class UserController {
 
     @PostMapping("/")
     public ResponseEntity create(@RequestBody Map<String, Object> request)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException {
         userService.create(request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/")
     public ResponseEntity update(@RequestBody Map<String, Object> request)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException {
         userService.update(request);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable(value = "id") String id)
-            throws ExecutionException, InterruptedException,
-            NoSuchElementException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException {
         userService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/")
     public ResponseEntity deleteFields(@RequestBody Map<String, Object> request)
-            throws ExecutionException, InterruptedException,
-            IllegalArgumentException, NoSuchElementException {
+            throws ExecutionException, InterruptedException {
         userService.deleteFields(request);
         return ResponseEntity.ok().build();
     }

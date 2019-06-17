@@ -22,7 +22,7 @@ public class EventController {
 
     @GetMapping("/{id}")
     public ResponseEntity findById(@PathVariable(value = "id") String id)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException {
         return ResponseEntity.ok(eventService.findById(id));
     }
 
@@ -38,31 +38,28 @@ public class EventController {
 
     @PostMapping("/")
     public ResponseEntity create(@RequestBody Map<String, Object> request)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException {
         eventService.create(request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/")
     public ResponseEntity update(@RequestBody Map<String, Object> request)
-            throws ExecutionException, InterruptedException, IllegalArgumentException {
+            throws ExecutionException, InterruptedException {
         eventService.update(request);
         return ResponseEntity.ok().build();
-
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable(value = "id") String id)
-            throws IllegalArgumentException, NoSuchElementException,
-            ExecutionException, InterruptedException {
+            throws ExecutionException, InterruptedException {
         eventService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/")
     public ResponseEntity deleteFields(@RequestBody Map<String, Object> request)
-            throws IllegalArgumentException, NoSuchElementException,
-            ExecutionException, InterruptedException {
+            throws ExecutionException, InterruptedException {
         eventService.deleteFields(request);
         return ResponseEntity.ok().build();
     }
