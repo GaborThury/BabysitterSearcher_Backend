@@ -1,11 +1,11 @@
 package com.homeproject.babysitting.app.babysitting.app.service;
 
+import com.google.cloud.firestore.DocumentReference;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 public class AdvertisementService implements DomainService {
@@ -21,7 +21,16 @@ public class AdvertisementService implements DomainService {
     @Override
     public List<Map<String, Object>> findAll() throws ExecutionException,
             InterruptedException, IllegalArgumentException {
-        return firestoreService.getAllDocumentsFromCollection(ADVERTISEMENT_COLLECTION);
+        List<Map<String, Object>> response = firestoreService.getAllDocumentsFromCollection(ADVERTISEMENT_COLLECTION);
+        ListIterator<Map<String, Object>> listIterator = response.listIterator();
+
+        while (listIterator.hasNext()) {
+            listIterator.set(listIterator.next().entrySet()
+                    .stream()
+                    .filter(element -> !(element.getValue() instanceof DocumentReference))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        }
+        return response;
     }
 
     @Override
@@ -33,7 +42,12 @@ public class AdvertisementService implements DomainService {
     @Override
     public Map<String, Object> findById(String id) throws ExecutionException,
             InterruptedException, IllegalArgumentException, NoSuchElementException {
-        return firestoreService.getDocumentFields(ADVERTISEMENT_COLLECTION, id);
+        Map<String, Object> response = firestoreService.getDocumentFields(ADVERTISEMENT_COLLECTION, id);
+
+        return response.entrySet()
+                .stream()
+                .filter(element -> !(element.getValue() instanceof DocumentReference))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
@@ -73,7 +87,7 @@ public class AdvertisementService implements DomainService {
         String id;
         try {
             id = request.get(ADVERTISEMENT_NAME_KEY).toString();
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             throw new IllegalArgumentException("Attribute 'id' cannot be null!");
         }
         if (id.isBlank()) throw new IllegalArgumentException("Attribute 'id' cannot be empty or blank!");
